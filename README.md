@@ -29,7 +29,7 @@ boot -d org.clojars.micha/boot-cp with-cp -i cp repl
 ;; build.boot
 
 (set-env!
-  :dependencies '[[org.clojars.micha/boot-cp "X.Y.Z"]])
+  :dependencies '[[org.clojars.micha/boot-cp "X.Y.Z" :scope "test"]])
 
 (require
   '[micha.boot-cp :refer [with-cp]])
