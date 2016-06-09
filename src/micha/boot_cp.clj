@@ -1,4 +1,5 @@
 (ns micha.boot-cp
+  {:boot/export-tasks true}
   (:require
     [boot.pod :as pod]
     [boot.file :as file]
