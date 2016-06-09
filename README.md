@@ -8,6 +8,22 @@
 
 Classpath task for boot.
 
+## Demo
+
+```shell
+# see task docs
+boot -d org.clojars.micha/boot-cp with-cp --help
+```
+```shell
+# write a classpath file
+boot -d org.clojars.micha/boot-cp \
+  with-cp -d '[[ring "1.4.0"]] -l lib -o cp
+```
+```shell
+# start a REPL with the claspath set up by the file
+boot -d org.clojars.micha/boot-cp with-cp -i cp repl
+```
+
 ## Usage
 
 ```clojure
