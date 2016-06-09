@@ -2,7 +2,7 @@
 
 [](dependency)
 ```clojure
-[org.clojars.micha/boot-cp "0.1.1"] ;; latest release
+[org.clojars.micha/boot-cp "0.1.2"] ;; latest release
 ```
 [](/dependency)
 

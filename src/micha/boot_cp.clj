@@ -20,7 +20,7 @@
 (defn- write-cp
   [out libdir dependencies]
   (when libdir (set-env! :local-repo libdir))
-  (let [deps-env (assoc pod/env :dependencies dependencies)]
+  (let [deps-env (update-in pod/env [:dependencies] #(or dependencies %))]
     (if-let [conflicts (not-empty (pedantic/dep-conflicts deps-env))]
       (throw (ex-info "Unresolved dependency conflicts." {:conflicts conflicts}))
       (let [resolved        (pod/resolve-dependency-jars deps-env)
@@ -44,8 +44,9 @@
   a java -cp compatible string to the output file PATH.
 
   The --dependencies option expects a vector of Maven coordinate vectors (the
-  same as you'd provide to set-env! :dependencies. This option only applies in
-  combination with the --out option described above.
+  same as you'd provide to set-env! :dependencies. The default if this option
+  is not given is to use the dependencies from the boot :dependencies. This
+  option only applies in combination with the --out option described above.
 
   NOTE: An exception is thrown if there are unresolved dependency conflicts.
 
@@ -57,7 +58,7 @@
   [i in PATH          str "The classpath file from which to read the JAR paths."
    o out PATH         str "The classpath file to which the JAR paths will be written."
    l libdir PATH      str "The (optional) lib directory in which to stash resolved JARs."
-   d dependencies EDN edn "The Maven dependencies to resolve and write to the classpath file."]
+   d dependencies EDN edn "The (optional) Maven dependencies to resolve and write to the classpath file."]
 
   (with-pass-thru [_]
     (cond out   (write-cp out libdir dependencies)
