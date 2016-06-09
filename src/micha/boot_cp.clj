@@ -29,7 +29,7 @@
 
 (defn- read-cp
   [in]
-  (doseq [path (filter string? (string/split (slurp in) #":"))]
+  (doseq [path (string/split (slurp in) #":")]
     (pod/add-classpath path)))
 
 (deftask with-cp
