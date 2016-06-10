@@ -19,6 +19,14 @@
       (let [canonical-libdir (.getCanonicalFile (io/file libdir))]
         (io/file libdir (file/relative-to canonical-libdir path))))))
 
+(defn conflict-kvs
+  "Create a seq of '(dep \"version\") from the input conflict.
+
+  The conflict is expected as a map entry from the dep-conflicts output,
+  i.e. the output of (first (seq (dep-conflicts env)))."
+  [conflict]
+  (map #(list (key conflict) (first %)) (val conflict)))
+
 (deftask with-cp
   "Specify Boot's classpath in a file instead of as Maven coordinates.
 
@@ -53,19 +61,30 @@
    d dependencies EDN   edn     "The (optional) Maven dependencies to resolve and write to the classpath file."]
 
   (with-pass-thru [_]
-    (let [scopes    (or scopes #{"compile" "runtime" "provided"})
-          scope?    #(scopes (:scope (util/dep-as-map %)))
-          not-me?   #(not= my-id (first %))
-          include?  #(and (scope? %) (not-me? %))]
+    (let [scopes     (or scopes #{"compile" "runtime" "provided"})
+          scope?     #(scopes (:scope (util/dep-as-map %)))
+          not-me?    #(not= my-id (first %))
+          include?   #(and (scope? %) (not-me? %))
+          direct-set (into #{} (map #(take 2 %) dependencies))
+          direct?    #(contains? direct-set %)]
       (if-not file
         (warn "Expected --file option. Skipping cp task.\n")
         (if-not write
           (doseq [path (string/split (slurp file) #":")]
             (pod/add-classpath path))
           (let [env (-> (update-in pod/env [:local-repo] #(or libdir %))
-                        (update-in [:dependencies] #(filter include? (or dependencies %))))]
-            (if-let [conflicts (and pedantic (not-empty (dep-conflicts env)))]
+                        (update-in [:dependencies] #(filter include? (or dependencies %))
+                        (update-in [:exclusions] (or exclusions #{})))]
+            (if-let [conflicts (and pedantic (->> (dep-conflicts env)
+                                                  (reduce #(if (not-any? direct? (conflict-kvs %2))
+                                                             (merge %1 %2)
+                                                             %1) {})
+                                                  (not-empty)))]
               (throw (ex-info "Unresolved dependency conflicts." {:conflicts conflicts}))
               (let [resolved        (pod/resolve-dependency-jars env)
                     relative-paths  (map (partial relativize libdir) resolved)]
                 (spit file (apply str (interpose ":" relative-paths)))))))))))
+
+(comment
+  (def direct-set (into #{} (map #(take 2 %) dependencies)))
+  (def env (assoc pod/env :dependencies dependencies)))
