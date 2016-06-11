@@ -36,25 +36,25 @@ boot -d org.clojars.micha/boot-cp with-cp -f cp repl
 
 (task-options!
   with-cp {:safe          true
-           :file          "deps.out"
+           :file          "deps.cp"
            :scopes        #{"compile"}
            :dependencies  '[[foo/bar "1.2.3"]
                             [baz/baf "4.5.6"]]})
 ```
 
-To write the classpath file `cp` do:
+Then, in the terminal in your project directory:
 
-```
+```shell
+# write the classpath file `deps.cp'
 boot with-cp -w
 ```
-
-This will create a file named `cp` with a `java -cp` compatible string of paths
-to dependency JARs.
-
-To load dependencies from a previously created classpath file do:
-
-```
+```shell
+# load dependencies from the classpath file
 boot with-cp task1 task2 ...
+```
+```shell
+# use the classpath file to configure Java classpath
+java -cp $(cat deps.cp) -jar target/project.jar
 ```
 
 ### Example &mdash; `deps.edn`
@@ -62,7 +62,7 @@ boot with-cp task1 task2 ...
 Suppose you want to be able to use `boot-cp` without a `build.boot` file etc.
 for simple projects.
 
-```
+```clojure
 ;; profile.boot
 
 (set-env!
@@ -73,15 +73,19 @@ for simple projects.
 
 (task-options!
   with-cp {:safe          true
-           :file          "deps.out"
+           :file          "deps.cp"
            :scopes        #{"compile"}
+           :local-repo    "lib"
            :dependencies  (when (-> "deps.edn" java.io.File. .isFile)
                             (read-string (slurp "deps.edn")))})
 ```
 
 Then, in your project directory you can have just a `deps.edn` file containing
-project's dependencies, and you can create a classpath file via `boot with-cp`
-anytime.
+project's dependencies, and you can create a classpath file anytime:
+
+```shell
+boot with-cp -w
+```
 
 ## Hacking on boot-cp
 
