@@ -2,7 +2,7 @@
 
 [](dependency)
 ```clojure
-[org.clojars.micha/boot-cp "0.1.3"] ;; latest release
+[org.clojars.micha/boot-cp "0.1.4"] ;; latest release
 ```
 [](/dependency)
 
@@ -26,7 +26,7 @@ boot -d org.clojars.micha/boot-cp with-cp -f cp repl
 ## Usage
 
 ```clojure
-;; build.boot
+;; build.boot or profile.boot
 
 (set-env!
   :dependencies '[[org.clojars.micha/boot-cp "X.Y.Z" :scope "test"]])
@@ -35,7 +35,7 @@ boot -d org.clojars.micha/boot-cp with-cp -f cp repl
   '[micha.boot-cp :refer [with-cp]])
 
 (task-options!
-  with-cp {:pedantic      true
+  with-cp {:safe          true
            :file          "deps.out"
            :scopes        #{"compile"}
            :dependencies  '[[foo/bar "1.2.3"]
@@ -56,6 +56,32 @@ To load dependencies from a previously created classpath file do:
 ```
 boot with-cp task1 task2 ...
 ```
+
+### Example &mdash; `deps.edn`
+
+Suppose you want to be able to use `boot-cp` without a `build.boot` file etc.
+for simple projects.
+
+```
+;; profile.boot
+
+(set-env!
+  :dependencies '[[org.clojars.micha/boot-cp "X.Y.Z" :scope "test"]])
+
+(require
+  '[micha.boot-cp :refer [with-cp]])
+
+(task-options!
+  with-cp {:safe          true
+           :file          "deps.out"
+           :scopes        #{"compile"}
+           :dependencies  (when (-> "deps.edn" java.io.File. .isFile)
+                            (read-string (slurp "deps.edn")))})
+```
+
+Then, in your project directory you can have just a `deps.edn` file containing
+project's dependencies, and you can create a classpath file via `boot with-cp`
+anytime.
 
 ## Hacking on boot-cp
 
