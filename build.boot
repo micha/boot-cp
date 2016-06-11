@@ -6,7 +6,7 @@
   '[adzerk.bootlaces :refer :all]
   '[micha.boot-cp :refer :all])
 
-(def +version+ "0.1.4")
+(def +version+ "0.1.5")
 
 (bootlaces! +version+)
 

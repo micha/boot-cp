@@ -20,11 +20,9 @@
         (io/file local-repo (file/relative-to canonical-local-repo path))))))
 
 (defn- dep-conflicts
-  [{:keys [dependencies exclusions] :as env}]
-  (let [non-transitive?   (set (map first dependencies))
-        global-exclusions (partial pod/apply-global-exclusions exclusions)]
-    (into {} (->> (update-in env [:dependencies] global-exclusions)
-                  (pedantic/dep-conflicts)
+  [{:keys [dependencies] :as env}]
+  (let [non-transitive? (set (map first dependencies))]
+    (into {} (->> (pedantic/dep-conflicts env)
                   (remove (comp non-transitive? first))))))
 
 (deftask with-cp
@@ -66,14 +64,15 @@
           scope?    #(scopes (:scope (util/dep-as-map %)))
           not-me?   #(not= my-id (first %))
           include?  #(and (scope? %) (not-me? %))
-          env-opts  (select-keys *opts* [:local-repo :exclusions :dependencies])]
+          env-opts  (select-keys *opts* [:local-repo :exclusions :dependencies])
+          exclude   (partial pod/apply-global-exclusions exclusions)]
       (if-not file
         (warn "Expected --file option. Skipping cp task.\n")
         (if-not write
           (doseq [path (string/split (slurp file) #":")]
             (pod/add-classpath path))
           (let [env  (-> (merge-with #(or %2 %1) pod/env env-opts)
-                         (update-in [:dependencies] (partial filter include?)))]
+                         (update-in [:dependencies] #(exclude (filter include? %))))]
             (if-let [conflicts (and safe (not-empty (dep-conflicts env)))]
               (throw (ex-info "Unresolved dependency conflicts." {:conflicts conflicts}))
               (let [resolved        (pod/resolve-dependency-jars env)
