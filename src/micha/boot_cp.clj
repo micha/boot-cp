@@ -7,7 +7,8 @@
     [clojure.string   :as string]
     [boot.pedantic    :as pedantic]
     [boot.util        :as util      :refer [info warn]]
-    [boot.core        :as boot      :refer [deftask with-pass-thru set-env!]]))
+    [boot.core        :as boot      :refer [*boot-version* deftask
+                                            with-pass-thru set-env!]]))
 
 (def my-id 'org.clojars.micha/boot-cp)
 
@@ -24,6 +25,27 @@
   (let [non-transitive? (set (map first dependencies))]
     (into {} (->> (pedantic/dep-conflicts env)
                   (remove (comp non-transitive? first))))))
+
+(defn make-pod-cp
+  "Returns a new pod with the given classpath. Classpath may be a collection
+  of String or java.io.File objects.
+
+  The :name option sets the name of the pod.
+
+  The :data option sets the boot.pod/data object in the pod. The data object
+  is used to coordinate different pods, for example the data object could be
+  a BlockingQueue or ConcurrentHashMap shared with other pods.
+
+  NB: The classpath must include Clojure (either clojure.jar or directories),
+  but must not include Boot's pod.jar, Shimdandy's impl, or Dynapath. These
+  are needed to bootstrap the pod, have no transitive dependencies, and are
+  added automatically."
+  [classpath & {:keys [name data] :or {name "pod-cp"}}]
+  (->> (assoc pod/env :dependencies [['boot/pod *boot-version*]])
+       (pod/resolve-dependency-jars)
+       (into (map io/file classpath))
+       (into-array java.io.File)
+       (boot.App/newShim name data)))
 
 (deftask with-cp
   "Specify Boot's classpath in a file instead of as Maven coordinates.
