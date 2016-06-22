@@ -102,6 +102,9 @@ boot with-cp -w
 ## Hacking on boot-cp
 
 ```shell
+boot docs # generate API docs
+```
+```shell
 boot build-jar # build JAR and install to local Maven repo
 ```
 ```shell
