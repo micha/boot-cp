@@ -2,17 +2,29 @@
 
 [](dependency)
 ```clojure
-[org.clojars.micha/boot-cp "0.1.5"] ;; latest release
+[org.clojars.micha/boot-cp "1.0.0"] ;; latest release
 ```
 [](/dependency)
 
 Classpath task for boot.
 
+## API Docs
+
+[Here][https://github.com/micha/boot-cp/tree/master/doc/micha.boot-cp.md].
+
 ## Demo
 
 ```shell
-# see task docs
+# see task command line usage help
 boot -d org.clojars.micha/boot-cp with-cp --help
+```
+```shell
+# load boot-cp into a REPL
+boot -d org.clojars.micha/boot-cp repl
+```
+```clojure
+;; see task REPL/build.boot usage help
+boot.user=> (doc with-cp)
 ```
 ```shell
 # write a classpath file
