@@ -30,11 +30,9 @@
       :ns micha.boot-cp
       :tag +version+
       :doc +description+
-
       (section
         "Tasks"
         with-cp)
-
       (section
         "Helper Functions"
         make-pod-cp))))
