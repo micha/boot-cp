@@ -6,7 +6,7 @@
 ```
 [](/dependency)
 
-Classpath task for boot.
+Classpath task for [boot][boot].
 
 ## API Docs
 
@@ -108,4 +108,5 @@ boot build-jar # build JAR and install to local Maven repo
 boot build-jar push-release # build JAR, install, and push to Clojars
 ```
 
+[boot]: https://github.com/boot-clj/boot
 [api-docs]: https://github.com/micha/boot-cp/tree/master/doc/micha.boot-cp.md
