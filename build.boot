@@ -8,7 +8,7 @@
   '[adzerk.bootlaces :refer :all]
   '[adzerk.clj-github-docs :refer :all])
 
-(def +version+      "1.0.0")
+(def +version+      "1.0.1")
 (def +description+  "Classpath task for the Boot build tool.")
 (def +scm-url+      "https://github.com/micha/boot-cp")
 

@@ -2,8 +2,6 @@
 
 Classpath task for the Boot build tool.
 
-[`my-id`](#my-id)
-
 ##### Tasks
 
  [`with-cp`](#with-cp)
@@ -14,7 +12,7 @@ Classpath task for the Boot build tool.
 
 <hr>
 
-### [`make-pod-cp`](../../1.0.0/src/micha/boot_cp.clj#L29)
+### [`make-pod-cp`](../../1.0.1/src/micha/boot_cp.clj#L31)
 
 ```clojure
 (make-pod-cp classpath & {:keys [name data], :or {name "pod-cp"}})
@@ -38,15 +36,7 @@ added automatically.
 
 <hr>
 
-### [`my-id`](../../1.0.0/src/micha/boot_cp.clj#L13)
-
-```
-FIXME: document this
-```
-
-<hr>
-
-### [`with-cp`](../../1.0.0/src/micha/boot_cp.clj#L50)
+### [`with-cp`](../../1.0.1/src/micha/boot_cp.clj#L52)
 
 ```clojure
 (with-cp & {:as *opts*, :keys [help safe write dependencies exclusions file local-repo scopes]})

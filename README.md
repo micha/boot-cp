@@ -2,7 +2,7 @@
 
 [](dependency)
 ```clojure
-[org.clojars.micha/boot-cp "1.0.0"] ;; latest release
+[org.clojars.micha/boot-cp "1.0.1"] ;; latest release
 ```
 [](/dependency)
 
@@ -10,7 +10,7 @@ Classpath task for boot.
 
 ## API Docs
 
-[Here][https://github.com/micha/boot-cp/tree/master/doc/micha.boot-cp.md].
+[Here][api-docs].
 
 ## Demo
 
@@ -107,3 +107,5 @@ boot build-jar # build JAR and install to local Maven repo
 ```shell
 boot build-jar push-release # build JAR, install, and push to Clojars
 ```
+
+[api-docs]: https://github.com/micha/boot-cp/tree/master/doc/micha.boot-cp.md

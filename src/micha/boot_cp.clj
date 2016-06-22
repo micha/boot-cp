@@ -10,7 +10,9 @@
     [boot.core        :as boot      :refer [*boot-version* deftask
                                             with-pass-thru set-env!]]))
 
-(def my-id 'org.clojars.micha/boot-cp)
+(def ^:private my-id
+  "This is here to accomodate loading boot-cp via boot -d."
+  'org.clojars.micha/boot-cp)
 
 (defn- relativize
   [local-repo path]
