@@ -1,7 +1,7 @@
 (set-env!
- :resource-paths #{"src"}
- :dependencies '[[adzerk/bootlaces "0.1.13" :scope "test"]
-                 [adzerk/clj-github-docs "0.1.1" :scope "test"]])
+  :resource-paths #{"src"}
+  :dependencies '[[adzerk/bootlaces "0.1.13" :scope "test"]
+                  [adzerk/clj-github-docs "0.1.1" :scope "test"]])
 
 (require
   '[micha.boot-cp :refer :all]
@@ -15,7 +15,7 @@
 (bootlaces! +version+)
 
 (task-options!
- pom  {:project     'org.clojars.micha/boot-cp
+  pom {:project     'org.clojars.micha/boot-cp
        :version     +version+
        :description +description+
        :url         +scm-url+
@@ -30,9 +30,5 @@
       :ns micha.boot-cp
       :tag +version+
       :doc +description+
-      (section
-        "Tasks"
-        with-cp)
-      (section
-        "Helper Functions"
-        make-pod-cp))))
+      (section "Tasks" with-cp)
+      (section "Helper Functions" make-pod-cp))))
